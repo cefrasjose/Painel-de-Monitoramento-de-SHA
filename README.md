@@ -50,6 +50,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
    - Baixe o arquivo `eng.traineddata` (Recomendado para números) neste link oficial: [GitHub Tesseract Data](https://github.com/tesseract-ocr/tessdata/blob/main/eng.traineddata).
    - Coloque o arquivo `eng.traineddata` dentro da pasta `tessdata`.
    
+
    *A estrutura final deve ficar assim:*
 
 
@@ -58,6 +59,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
     ├── src/
     └── tessdata/
     └── eng.traineddata
+
 
 3. **Ambiente de Simulação (SHAs)**:
 - O sistema monitora pastas locais que simulam os hidrômetros.
@@ -78,5 +80,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ---
 
 **Desenvolvido por:** Cefras Mandú
+
 **Professor:** Katyusco Santos
+
 **Disciplina:** Padrões de Projeto - Eng. de Computação - IFPB-CG
