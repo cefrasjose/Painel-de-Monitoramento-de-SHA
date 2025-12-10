@@ -62,7 +62,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ```
 
 3. **Ambiente de Simulação (SHAs)**:
-- O sistema monitora pastas locais que simulam os hidrômetros.
+- O sistema monitora pastas locais onde os hidrômetros armazenam seus registros em capturas.
 - Crie as seguintes pastas no seu computador (ou ajuste os caminhos na classe `MonitoramentoFacade`):
   - `C:/temp/sha01` (Para o Hidrômetro 01)
   - `C:/temp/sha02` (Para o Hidrômetro 02)
