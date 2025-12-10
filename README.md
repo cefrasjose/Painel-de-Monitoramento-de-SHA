@@ -53,13 +53,13 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 
    *A estrutura final deve ficar assim:*
 
-
+```
     MeuProjeto/
     ├── pom.xml
     ├── src/
     └── tessdata/
     └── eng.traineddata
-
+```
 
 3. **Ambiente de Simulação (SHAs)**:
 - O sistema monitora pastas locais que simulam os hidrômetros.
