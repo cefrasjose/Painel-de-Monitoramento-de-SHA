@@ -18,7 +18,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ### 3. Gestão de Dados (Fachada e DAO)
 - [ ] **Entidades**: Implementação de Usuario, Hidrometro e Leitura.
 - [ ] **Persistência**: Implementação do padrão DAO (Salvar em Arquivo/JSON).
-- [ ] **Fachada**: Implementação da classe `MonitoramentoFacade`.
+- [x] **Fachada**: Implementação da classe `MonitoramentoFacade`.
 
 ### 4. Alertas e Notificações
 - [ ] **Lógica de Alerta**: Verificação de limite de consumo (Observer Pattern).
@@ -26,7 +26,7 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 
 ### 5. Interface e Entrega
 - [ ] **CLI/GUI**: Interface básica para iniciar/parar o monitoramento.
-- [ ] **Vídeo de Demonstração**: SHAs em funcionamento e detecção pelo painel.
+- [x] **Vídeo de Demonstração**: SHAs em funcionamento e detecção pelo painel.
 
 ---
 
