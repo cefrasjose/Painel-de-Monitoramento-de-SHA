@@ -33,18 +33,50 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
-* Java JDK 17+
-* Tesseract OCR instalado no sistema operacional (necessário para o Tess4J).
-* Maven (para dependências).
+* **Java JDK 17** ou superior.
+* **Maven** (geralmente incluso no IntelliJ).
+* **Conexão com a Internet** (para baixar as dependências do `pom.xml` na primeira execução).
 
-### Configuração
-1. Configure o arquivo `config.properties` na raiz com os caminhos dos diretórios dos SHAs.
-2. Certifique-se de que as pastas dos SHAs existem.
+### 🛠️ Configuração do Ambiente (Passo a Passo)
 
-### Execução
+1. **Dependências Maven**:
+   - Abra o projeto no IntelliJ.
+   - Aguarde o Maven baixar as bibliotecas listadas no `pom.xml` (Tess4J, GSON, Commons Email).
+   - Caso não baixe automaticamente, clique no ícone "Reload All Maven Projects" na aba lateral do Maven.
 
+2. **Configuração do OCR (Tesseract)**:
+   - O projeto requer um arquivo de treinamento para ler os números.
+   - Crie uma pasta chamada `tessdata` na **raiz** do projeto (no mesmo nível do `pom.xml` e da pasta `src`).
+   - Baixe o arquivo `eng.traineddata` (Recomendado para números) neste link oficial: [GitHub Tesseract Data](https://github.com/tesseract-ocr/tessdata/blob/main/eng.traineddata).
+   - Coloque o arquivo `eng.traineddata` dentro da pasta `tessdata`.
+   
+   *A estrutura final deve ficar assim:*
+
+
+    MeuProjeto/
+    ├── pom.xml
+    ├── src/
+    └── tessdata/
+    └── eng.traineddata
+
+3. **Ambiente de Simulação (SHAs)**:
+- O sistema monitora pastas locais que simulam os hidrômetros.
+- Crie as seguintes pastas no seu computador (ou ajuste os caminhos na classe `MonitoramentoFacade`):
+  - `C:/temp/sha01` (Para o Hidrômetro 01)
+  - `C:/temp/sha02` (Para o Hidrômetro 02)
+
+### ▶️ Execução
+
+1. Localize a classe principal: `src/main/java/br/edu/ifpb/monitoramento/Main.java`.
+2. Clique com o botão direito no arquivo e selecione **"Run Main.main()"**.
+3. Acompanhe o **Console** do IntelliJ.
+- O sistema exibirá a mensagem `[AGENDADOR] Verificando...` a cada 5 segundos.
+4. **Para testar**:
+- Copie uma imagem de hidrômetro (`.jpg`) para dentro de uma das pastas criadas (ex: `C:/temp/sha01`).
+- O console exibirá imediatamente um alerta de detecção e processará o arquivo.
 
 ---
+
 **Desenvolvido por:** Cefras Mandú
 **Professor:** Katyusco Santos
 **Disciplina:** Padrões de Projeto - Eng. de Computação - IFPB-CG
