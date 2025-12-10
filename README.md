@@ -5,28 +5,28 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ## 📋 Status do Projeto (Barra de Progresso)
 
 ### 1. Documentação e Modelagem
-- [x] Especificação de Requisitos Final (PDF)
-- [x] Diagrama de Casos de Uso
-- [x] Diagrama de Classes e Arquitetura
+- ✅ Especificação de Requisitos Final (PDF)
+- ✅ Diagrama de Casos de Uso
+- ✅ Diagrama de Classes e Arquitetura
 
 ### 2. Funcionalidades Principais (Core)
-- [ ] **Configuração e Estrutura**: Leitura de `config.properties` e Singleton Logger.
-- [ ] **Leitura de Imagens (OCR)**: Integração com Tess4J e Padrão Adapter.
-- [ ] **Agendador (Thread)**: Monitoramento automático de diretórios (Concorrência).
-- [ ] **Mover Arquivos**: Lógica para mover imagens de `/entrada` para `/processados`.
+- ⬜ **Configuração e Estrutura**: Leitura de `config.properties` e Singleton Logger.
+- ⬜ **Leitura de Imagens (OCR)**: Integração com Tess4J e Padrão Adapter.
+- ⬜ **Agendador (Thread)**: Monitoramento automático de diretórios (Concorrência).
+- ⬜ **Mover Arquivos**: Lógica para mover imagens de `/entrada` para `/processados`.
 
 ### 3. Gestão de Dados (Fachada e DAO)
-- [ ] **Entidades**: Implementação de Usuario, Hidrometro e Leitura.
-- [ ] **Persistência**: Implementação do padrão DAO (Salvar em Arquivo/JSON).
-- [x] **Fachada**: Implementação da classe `MonitoramentoFacade`.
+- ⬜ **Entidades**: Implementação de Usuario, Hidrometro e Leitura.
+- ⬜ **Persistência**: Implementação do padrão DAO (Salvar em Arquivo/JSON).
+- ✅ **Fachada**: Implementação da classe `MonitoramentoFacade`.
 
 ### 4. Alertas e Notificações
-- [ ] **Lógica de Alerta**: Verificação de limite de consumo (Observer Pattern).
-- [ ] **Envio de E-mail**: Integração com servidor SMTP simulado ou real.
+- ⬜ **Lógica de Alerta**: Verificação de limite de consumo (Observer Pattern).
+- ⬜ **Envio de E-mail**: Integração com servidor SMTP simulado ou real.
 
 ### 5. Interface e Entrega
-- [ ] **CLI/GUI**: Interface básica para iniciar/parar o monitoramento.
-- [x] **Vídeo de Demonstração**: SHAs em funcionamento e detecção pelo painel.
+- ⬜ **CLI/GUI**: Interface básica para iniciar/parar o monitoramento.
+- ✅ **Vídeo de Demonstração**: SHAs em funcionamento e detecção pelo painel.
 
 ---
 
