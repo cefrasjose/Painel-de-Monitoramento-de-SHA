@@ -45,6 +45,6 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 
 
 ---
-**Desenvolvido por:** CefrasMandú
+**Desenvolvido por:** Cefras Mandú
 **Professor:** Katyusco Santos
 **Disciplina:** Padrões de Projeto - Eng. de Computação - IFPB-CG
