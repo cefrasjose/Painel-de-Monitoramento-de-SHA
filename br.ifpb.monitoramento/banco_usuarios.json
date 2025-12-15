@@ -8,48 +8,38 @@
       {
         "id": "SHA-001",
         "diretorioMonitorado": "C:\\Users\\cefra\\Documents\\simulador hidrometro\\Medições_202021250024",
-        "ultimaLeitura": 994.0,
+        "ultimaLeitura": 0.0,
         "ativo": true,
-        "historicoLeituras": [
-          {
-            "valor": 9.00000000001377E47,
-            "dataHora": "2025-12-15T04:03:01.8849376",
-            "nomeArquivo": "01.jpeg"
-          },
-          {
-            "valor": 994.0,
-            "dataHora": "2025-12-15T04:34:03.5785566",
-            "nomeArquivo": "01.jpeg"
-          }
-        ]
+        "historicoLeituras": []
       },
       {
         "id": "SHA-002",
         "diretorioMonitorado": "C:\\Users\\cefra\\Documents\\arthur_hidrometro\\Medições_202310980012",
-        "ultimaLeitura": 1880.0,
+        "ultimaLeitura": 18.8,
         "ativo": true,
         "historicoLeituras": [
           {
-            "valor": 1135641.0,
-            "dataHora": "2025-12-15T04:03:02.1214379",
-            "nomeArquivo": "01.jpeg"
-          },
-          {
-            "valor": 1.880651236351341E15,
-            "dataHora": "2025-12-15T04:03:02.3719383",
-            "nomeArquivo": "02.jpeg"
-          },
-          {
-            "valor": 35.0,
-            "dataHora": "2025-12-15T04:34:03.8105567",
-            "nomeArquivo": "01.jpeg"
-          },
-          {
-            "valor": 1880.0,
-            "dataHora": "2025-12-15T04:34:04.0115566",
+            "valor": 18.8,
+            "dataHora": "2025-12-15T07:14:33.1870325",
             "nomeArquivo": "02.jpeg"
           }
         ]
+      }
+    ],
+    "limiteConsumoMensal": 100.0
+  },
+  {
+    "nome": "Katyusco",
+    "cpf": "456",
+    "email": "katyusco@ifpb.edu.com.br",
+    "tipo": "CLIENTE",
+    "hidrometros": [
+      {
+        "id": "SHA-01",
+        "diretorioMonitorado": "C:\\Users\\cefra\\Documents\\arthur_hidrometro\\Medições_202310980012",
+        "ultimaLeitura": 0.0,
+        "ativo": true,
+        "historicoLeituras": []
       }
     ],
     "limiteConsumoMensal": 100.0

@@ -10,23 +10,49 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 - ✅ Diagrama de Classes e Arquitetura
 
 ### 2. Funcionalidades Principais (Core)
-- ⬜ **Configuração e Estrutura**: Leitura de `config.properties` e Singleton Logger.
-- ⬜ **Leitura de Imagens (OCR)**: Integração com Tess4J e Padrão Adapter.
-- ⬜ **Agendador (Thread)**: Monitoramento automático de diretórios (Concorrência).
-- ⬜ **Mover Arquivos**: Lógica para mover imagens de `/entrada` para `/processados`.
+- ✅ **Configuração e Estrutura**: Estrutura Maven e dependências configuradas.
+- ✅ **Leitura de Imagens (OCR)**: Integração com Tess4J, tratamento de imagem (pré-processamento) e filtro de ruído.
+- ✅ **Agendador (Thread)**: Monitoramento automático de diretórios usando `ScheduledExecutorService`.
+- ✅ **Mover Arquivos**: Lógica robusta para mover imagens processadas ou com erro (evita loops).
 
 ### 3. Gestão de Dados (Fachada e DAO)
-- ⬜ **Entidades**: Implementação de Usuario, Hidrometro e Leitura.
-- ⬜ **Persistência**: Implementação do padrão DAO (Salvar em Arquivo/JSON).
-- ✅ **Fachada**: Implementação da classe `MonitoramentoFacade`.
+- ✅ **Entidades**: Implementação de Usuario, Hidrometro e Leitura.
+- ✅ **Persistência**: Implementação do padrão DAO com persistência em JSON (Gson) e adaptador para datas.
+- ✅ **Fachada**: Implementação da classe `MonitoramentoFacade` centralizando a lógica.
 
 ### 4. Alertas e Notificações
-- ⬜ **Lógica de Alerta**: Verificação de limite de consumo (Observer Pattern).
-- ⬜ **Envio de E-mail**: Integração com servidor SMTP simulado ou real.
+- ✅ **Lógica de Alerta**: Verificação de limite de consumo (limite mensal vs. leitura).
+- ✅ **Envio de E-mail**: Implementação do Padrão Observer para notificação de alertas via E-mail.
 
 ### 5. Interface e Entrega
-- ⬜ **CLI/GUI**: Interface básica para iniciar/parar o monitoramento.
+- ✅ **CLI**: Interface de Linha de Comando (Menu) para cadastro e consultas.
 - ✅ **Vídeo de Demonstração**: SHAs em funcionamento e detecção pelo painel.
+
+---
+
+## 🧩 Padrões de Projeto Utilizados
+
+Este sistema foi arquitetado utilizando padrões de projeto clássicos para garantir desacoplamento e manutenibilidade. Abaixo estão os locais onde cada padrão foi aplicado:
+
+### 1. Facade (Fachada)
+* **Propósito:** Simplificar a interface de uso do sistema, escondendo a complexidade dos subsistemas de OCR, Banco de Dados, Agendamento e Notificações.
+* **Localização:** `br.edu.ifpb.monitoramento.facade.MonitoramentoFacade`
+* **Uso:** A classe `Main` e o `MenuConsole` interagem apenas com a Facade, sem conhecer as regras de negócio internas.
+
+### 2. Adapter (Adaptador)
+* **Propósito:** Isolar o sistema da biblioteca externa de OCR (Tess4J). Permite trocar a tecnologia de reconhecimento visual sem alterar o restante do código.
+* **Localização:** `br.edu.ifpb.monitoramento.adapter.TesseractAdapter` (Implementa `ILeitorImagem`).
+* **Uso:** Adapta a chamada da biblioteca Tesseract e adiciona pré-processamento de imagem (escala de cinza/zoom) para atender à interface esperada pelo sistema.
+
+### 3. Observer (Observador)
+* **Propósito:** Permitir que o sistema de monitoramento notifique interessados (como o módulo de envio de e-mails) quando um evento crítico ocorre (limite de consumo excedido), sem acoplamento rígido.
+* **Localização:** `br.edu.ifpb.monitoramento.observer.EmailNotificador` (Implementa `IObservadorAlerta`).
+* **Uso:** A Facade atua como o *Subject* notificando a lista de observadores quando uma leitura ultrapassa o limite configurado.
+
+### 4. DAO (Data Access Object)
+* **Propósito:** Abstrair e encapsular o acesso aos dados, separando a lógica de negócio da lógica de persistência (arquivo JSON).
+* **Localização:** `br.edu.ifpb.monitoramento.dao.UsuarioArquivoDAO` (Implementa `UsuarioDAO`).
+* **Uso:** Gerencia a leitura e escrita no arquivo `banco_usuarios.json`, utilizando adaptadores do Gson para tipos complexos (`LocalDateTime`).
 
 ---
 
@@ -40,42 +66,26 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 ### 🛠️ Configuração do Ambiente (Passo a Passo)
 
 1. **Dependências Maven**:
-   - Abra o projeto no IntelliJ.
-   - Aguarde o Maven baixar as bibliotecas listadas no `pom.xml` (Tess4J, GSON, Commons Email).
-   - Caso não baixe automaticamente, clique no ícone "Reload All Maven Projects" na aba lateral do Maven.
+    - Abra o projeto no IntelliJ.
+    - Aguarde o Maven baixar as bibliotecas listadas no `pom.xml` (Tess4J, GSON, Commons Email).
+    - Caso não baixe automaticamente, clique no ícone "Reload All Maven Projects" na aba lateral do Maven.
 
 2. **Configuração do OCR (Tesseract)**:
-   - O projeto requer um arquivo de treinamento para ler os números.
-   - Crie uma pasta chamada `tessdata` na **raiz** do projeto (no mesmo nível do `pom.xml` e da pasta `src`).
-   - Baixe o arquivo `eng.traineddata` (Recomendado para números) neste link oficial: [GitHub Tesseract Data](https://github.com/tesseract-ocr/tessdata/blob/main/eng.traineddata).
-   - Coloque o arquivo `eng.traineddata` dentro da pasta `tessdata`.
-   
-
-   *A estrutura final deve ficar assim:*
-
-```
-    MeuProjeto/
-    ├── pom.xml
-    ├── src/
-    └── tessdata/
-    └── eng.traineddata
-```
+    - O projeto requer um arquivo de treinamento para ler os números.
+    - Crie uma pasta chamada `tessdata` na **raiz** do projeto (no mesmo nível do `pom.xml` e da pasta `src`).
+    - Baixe o arquivo `eng.traineddata` (Recomendado para números) neste link oficial: [GitHub Tesseract Data](https://github.com/tesseract-ocr/tessdata/blob/main/eng.traineddata).
+    - Coloque o arquivo `eng.traineddata` dentro da pasta `tessdata`.
 
 3. **Ambiente de Simulação (SHAs)**:
-- O sistema monitora pastas locais onde os hidrômetros armazenam seus registros em capturas.
-- Crie as seguintes pastas no seu computador (ou ajuste os caminhos na classe `MonitoramentoFacade`):
-  - `C:/temp/sha01` (Para o Hidrômetro 01)
-  - `C:/temp/sha02` (Para o Hidrômetro 02)
+    - O sistema monitora pastas locais. Certifique-se de que as pastas configuradas no cadastro do hidrômetro existam no seu computador.
 
 ### ▶️ Execução
 
 1. Localize a classe principal: `src/main/java/br/edu/ifpb/monitoramento/Main.java`.
 2. Clique com o botão direito no arquivo e selecione **"Run Main.main()"**.
-3. Acompanhe o **Console** do IntelliJ.
-- O sistema exibirá a mensagem `[AGENDADOR] Verificando...` a cada 5 segundos.
-4. **Para testar**:
-- Copie uma imagem de hidrômetro (`.jpg`) para dentro de uma das pastas criadas (ex: `C:/temp/sha01`).
-- O console exibirá imediatamente um alerta de detecção e processará o arquivo.
+3. O **Menu Interativo** aparecerá no console.
+4. Utilize a **Opção 4** para iniciar o monitoramento em segundo plano.
+5. **Para testar**: Copie uma imagem de hidrômetro (`.jpg`) para a pasta de um SHA cadastrado. O sistema detectará, processará e moverá o arquivo.
 
 ---
 

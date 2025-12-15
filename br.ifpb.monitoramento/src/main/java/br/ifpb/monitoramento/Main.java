@@ -4,6 +4,7 @@ import br.ifpb.monitoramento.facade.MonitoramentoFacade;
 import br.ifpb.monitoramento.model.Hidrometro;
 import br.ifpb.monitoramento.model.TipoUsuario;
 import br.ifpb.monitoramento.model.Usuario;
+import br.ifpb.monitoramento.view.MenuConsole;
 
 import java.util.Scanner;
 
@@ -31,11 +32,7 @@ public class Main {
             System.out.println("Usuario criado com sucesso no arquivo JSON!");
         }
 
-        painel.iniciarMonitoramento();
-
-        System.out.println("\nPressione ENTER para encerrar...");
-        new Scanner(System.in).nextLine();
-
-        painel.pararMonitoramento();
+        MenuConsole menu = new MenuConsole();
+        menu.exibirMenu();
     }
 }

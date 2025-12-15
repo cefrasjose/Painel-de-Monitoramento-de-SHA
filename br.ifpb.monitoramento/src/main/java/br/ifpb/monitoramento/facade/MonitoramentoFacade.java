@@ -49,7 +49,7 @@ public class MonitoramentoFacade {
     }
 
     private void verificarDiretorios() {
-        System.out.println("\n[AGENDADOR] Buscando hidrometros ativos no banco...");
+        //System.out.println("\n[AGENDADOR] Buscando hidrometros ativos no banco...");
 
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         if (usuarios.isEmpty()) return;
@@ -72,6 +72,9 @@ public class MonitoramentoFacade {
                     name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
 
             if (arquivos != null && arquivos.length > 0) {
+
+                java.util.Arrays.sort(arquivos, java.util.Comparator.comparing(File::getName));
+
                 for (File arquivo : arquivos) {
                     System.out.println("⚠️ NOVA IMAGEM DETECTADA: " + arquivo.getName());
 

@@ -28,6 +28,12 @@ public class Hidrometro {
     //Se nao tiver anterior, consumo eh 0 ou o proprio valor.
     public double calcularConsumo(double novaLeitura) {
         if (ultimaLeitura == 0.0) return 0.0; //Primeira leitura
+
+        //2 Protecao contra consumo negativo (Reset do hidrometro ou erro de OCR)
+        if (novaLeitura < ultimaLeitura) {
+            System.out.println("   🔄 [INFO] Leitura menor que a anterior (Reset detectado). Reiniciando contagem.");
+            return 0.0; // Assume consumo zero neste ciclo para não gerar negativo
+        }
         return novaLeitura - ultimaLeitura;
     }
 
@@ -37,4 +43,5 @@ public class Hidrometro {
     public double getUltimaLeitura() { return ultimaLeitura; }
     public boolean isAtivo() { return ativo; }
     public void setAtivo(boolean ativo) { this.ativo = ativo; }
+    public List<Leitura> getHistoricoLeituras() { return historicoLeituras; }
 }
