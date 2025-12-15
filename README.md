@@ -56,6 +56,32 @@ Este sistema foi arquitetado utilizando padrões de projeto clássicos para gara
 
 ---
 
+## 🛠️ Tecnologias Utilizadas
+
+* **Linguagem:** Java 17+
+* **Gerenciamento de Dependências:** Maven
+* **OCR (Reconhecimento Óptico):** Tess4J (Wrapper do Tesseract)
+* **Processamento de Imagem:** Java AWT / ImageIO
+* **Persistência:** JSON (Google Gson)
+* **E-mail:** Apache Commons Email
+
+---
+
+## 📂 Estrutura do Projeto
+
+A organização dos pacotes segue estritamente os padrões de projeto implementados, garantindo alta coesão e baixo acoplamento:
+
+```
+br.edu.ifpb.monitoramento
+├── adapter    # Padrão ADAPTER (TesseractAdapter)
+├── dao        # Padrão DAO (UsuarioArquivoDAO)
+├── facade     # Padrão FACADE (MonitoramentoFacade)
+├── model      # Entidades do Domínio (Usuario, Hidrometro, Leitura)
+├── observer   # Padrão OBSERVER (EmailNotificador)
+├── view       # Interface CLI (MenuConsole)
+└── Main.java  # Ponto de Entrada
+```
+
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
