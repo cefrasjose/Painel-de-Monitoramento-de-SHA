@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Painel Monitoramento" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/openjdk-23.0.2" />
+    <option name="MAIN_CLASS_NAME" value="br.ifpb.monitoramento.Main" />
+    <module name="br.ifpb.monitoramento" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/br.ifpb.monitoramento" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
