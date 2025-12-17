@@ -37,7 +37,7 @@ public class MonitoramentoFacade {
         this.observadores.add(new EmailNotificador());
     }
 
-    //3 Metodo publico estático para acessar a instancia (Ponto Global de Acesso)
+    //3 Metodo publico estatico para acessar a instancia (Ponto Global de Acesso)
     public static synchronized MonitoramentoFacade getInstance() {
         if (instance == null) {
             instance = new MonitoramentoFacade();
