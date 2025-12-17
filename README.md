@@ -32,27 +32,33 @@ Este projeto implementa uma solução centralizada para monitorar o consumo de �
 
 ## 🧩 Padrões de Projeto Utilizados
 
-Este sistema foi arquitetado utilizando padrões de projeto clássicos para garantir desacoplamento e manutenibilidade. Abaixo estão os locais onde cada padrão foi aplicado:
+### Criacionais
+1. **Singleton**
+   - **Local:** `MonitoramentoFacade`.
+   - **Propósito:** Garante que apenas uma instância do motor de monitoramento exista, evitando conflitos de acesso aos arquivos e threads duplicadas.
 
-### 1. Facade (Fachada)
-* **Propósito:** Simplificar a interface de uso do sistema, escondendo a complexidade dos subsistemas de OCR, Banco de Dados, Agendamento e Notificações.
-* **Localização:** `br.edu.ifpb.monitoramento.facade.MonitoramentoFacade`
-* **Uso:** A classe `Main` e o `MenuConsole` interagem apenas com a Facade, sem conhecer as regras de negócio internas.
+2. **Factory Method**
+   - **Local:** `UsuarioFactory`.
+   - **Propósito:** Encapsula a lógica de criação de novos usuários, facilitando a manutenção caso novos tipos de usuários sejam adicionados.
 
-### 2. Adapter (Adaptador)
-* **Propósito:** Isolar o sistema da biblioteca externa de OCR (Tess4J). Permite trocar a tecnologia de reconhecimento visual sem alterar o restante do código.
-* **Localização:** `br.edu.ifpb.monitoramento.adapter.TesseractAdapter` (Implementa `ILeitorImagem`).
-* **Uso:** Adapta a chamada da biblioteca Tesseract e adiciona pré-processamento de imagem (escala de cinza/zoom) para atender à interface esperada pelo sistema.
+### Estruturais
+3. **Facade (Fachada)**
+   - **Local:** `MonitoramentoFacade`.
+   - **Propósito:** Simplifica a complexidade do sistema para a interface (Menu), unificando OCR, DAO e Alertas.
 
-### 3. Observer (Observador)
-* **Propósito:** Permitir que o sistema de monitoramento notifique interessados (como o módulo de envio de e-mails) quando um evento crítico ocorre (limite de consumo excedido), sem acoplamento rígido.
-* **Localização:** `br.edu.ifpb.monitoramento.observer.EmailNotificador` (Implementa `IObservadorAlerta`).
-* **Uso:** A Facade atua como o *Subject* notificando a lista de observadores quando uma leitura ultrapassa o limite configurado.
+4. **Adapter (Adaptador)**
+   - **Local:** `TesseractAdapter`.
+   - **Propósito:** Adapta a biblioteca externa Tess4J para a interface `ILeitorImagem`, permitindo troca de tecnologia e pré-processamento.
 
-### 4. DAO (Data Access Object)
-* **Propósito:** Abstrair e encapsular o acesso aos dados, separando a lógica de negócio da lógica de persistência (arquivo JSON).
-* **Localização:** `br.edu.ifpb.monitoramento.dao.UsuarioArquivoDAO` (Implementa `UsuarioDAO`).
-* **Uso:** Gerencia a leitura e escrita no arquivo `banco_usuarios.json`, utilizando adaptadores do Gson para tipos complexos (`LocalDateTime`).
+### Comportamentais
+5. **Observer (Observador)**
+   - **Local:** `EmailNotificador`.
+   - **Propósito:** Notifica automaticamente o módulo de e-mail quando o consumo excede o limite.
+
+### Arquiteturais / Persistência
+6. **DAO (Data Access Object)**
+   - **Local:** `UsuarioArquivoDAO`.
+   - **Propósito:** Abstrai a persistência em arquivo JSON, separando-a da regra de negócio.
 
 ---
 

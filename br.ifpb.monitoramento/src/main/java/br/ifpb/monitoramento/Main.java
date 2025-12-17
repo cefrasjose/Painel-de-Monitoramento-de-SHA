@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        MonitoramentoFacade painel = new MonitoramentoFacade();
+        MonitoramentoFacade painel = MonitoramentoFacade.getInstance();
 
         //DADOS INICIAIS
         //Se o banco estiver vazio, cria um usuario padrao com os SHAs

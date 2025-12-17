@@ -3,7 +3,7 @@ package br.ifpb.monitoramento.view;
 import br.ifpb.monitoramento.facade.MonitoramentoFacade;
 import br.ifpb.monitoramento.model.Hidrometro;
 import br.ifpb.monitoramento.model.Leitura;
-import br.ifpb.monitoramento.model.TipoUsuario;
+import br.ifpb.monitoramento.model.UsuarioFactory;
 import br.ifpb.monitoramento.model.Usuario;
 
 import java.util.Scanner;
@@ -14,7 +14,7 @@ public class MenuConsole {
     private final Scanner scanner;
 
     public MenuConsole() {
-        this.facade = new MonitoramentoFacade();
+        this.facade = MonitoramentoFacade.getInstance();
         this.scanner = new Scanner(System.in);
     }
 
@@ -56,7 +56,7 @@ public class MenuConsole {
         System.out.print("E-mail: ");
         String email = scanner.nextLine();
 
-        Usuario u = new Usuario(nome, cpf, email, TipoUsuario.CLIENTE);
+        Usuario u = UsuarioFactory.criarUsuarioPadrao(nome, cpf, email);
         facade.getUsuarioDAO().salvar(u);
         System.out.println("✅ Usuário cadastrado com sucesso!");
     }

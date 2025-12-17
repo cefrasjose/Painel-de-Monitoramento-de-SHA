@@ -10,11 +10,10 @@ import br.ifpb.monitoramento.model.Leitura;
 import br.ifpb.monitoramento.model.Usuario;
 import br.ifpb.monitoramento.observer.EmailNotificador;
 import br.ifpb.monitoramento.observer.IObservadorAlerta;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import java.io.File;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,42 +21,55 @@ import java.util.concurrent.TimeUnit;
 
 public class MonitoramentoFacade {
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    //1. Variável estática para guardar a única instância (SINGLETON)
+    private static MonitoramentoFacade instance;
+
+    //private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final UsuarioDAO usuarioDAO;
     private final ILeitorImagem leitorOCR; // Componente de OCR
     private final List<IObservadorAlerta> observadores = new ArrayList<>();
+    private ScheduledExecutorService scheduler;
 
-    public MonitoramentoFacade() {
+    //2 Construtor PRIVADO para impedir 'new MonitoramentoFacade()' fora daqui
+    private MonitoramentoFacade() {
         this.usuarioDAO = new UsuarioArquivoDAO();
-        this.leitorOCR = new TesseractAdapter(); //Injecao da implementacao concreta (Tesseract)
-        //Registra o Notificador de Email (Padrao Observer)
+        this.leitorOCR = new TesseractAdapter();
         this.observadores.add(new EmailNotificador());
     }
 
+    //3 Metodo público estático para acessar a instância (Ponto Global de Acesso)
+    public static synchronized MonitoramentoFacade getInstance() {
+        if (instance == null) {
+            instance = new MonitoramentoFacade();
+        }
+        return instance;
+    }
+
     public void iniciarMonitoramento() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            System.out.println(">>> O monitoramento já está rodando.");
+            return;
+        }
+
         System.out.println(">>> Painel de Monitoramento Iniciado <<<");
+        scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(this::verificarDiretorios, 0, 5, TimeUnit.SECONDS);
     }
 
     public void pararMonitoramento() {
-        scheduler.shutdown();
-        System.out.println(">>> Monitoramento Parado <<<");
-    }
-
-    public UsuarioDAO getUsuarioDAO() {
-        return usuarioDAO;
+        if (scheduler != null) {
+            scheduler.shutdown();
+            System.out.println(">>> Monitoramento Parado <<<");
+        }
     }
 
     private void verificarDiretorios() {
-        //System.out.println("\n[AGENDADOR] Buscando hidrometros ativos no banco...");
-
+        //System.out.println("\n[AGENDADOR] Buscando hidrômetros ativos no banco...");
         List<Usuario> usuarios = usuarioDAO.listarTodos();
-        if (usuarios.isEmpty()) return;
-
-        for (Usuario usuario : usuarios) {
-            for (Hidrometro sha : usuario.getHidrometros()) {
-                if (sha.isAtivo()) {
-                    monitorarPasta(sha, usuario);
+        for (Usuario u : usuarios) {
+            for (Hidrometro h : u.getHidrometros()) {
+                if (h.isAtivo()) {
+                    monitorarPasta(h, u);
                 }
             }
         }
@@ -65,47 +77,32 @@ public class MonitoramentoFacade {
 
     private void monitorarPasta(Hidrometro sha, Usuario usuario) {
         File diretorio = new File(sha.getDiretorioMonitorado());
+        if (!diretorio.exists() || !diretorio.isDirectory()) return;
 
-        if (diretorio.exists() && diretorio.isDirectory()) {
-            // Busca apenas JPG/JPEG
-            File[] arquivos = diretorio.listFiles((dir, name) ->
-                    name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
+        File[] arquivos = diretorio.listFiles((dir, name) ->
+                name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
 
-            if (arquivos != null && arquivos.length > 0) {
+        if (arquivos != null && arquivos.length > 0) {
+            java.util.Arrays.sort(arquivos, java.util.Comparator.comparing(File::getName));
 
-                java.util.Arrays.sort(arquivos, java.util.Comparator.comparing(File::getName));
+            for (File arquivo : arquivos) {
+                System.out.println("⚠️ NOVA IMAGEM DETECTADA: " + arquivo.getName());
+                try {
+                    double valorLido = leitorOCR.extrairValor(arquivo);
+                    double consumo = sha.calcularConsumo(valorLido);
+                    sha.registrarLeitura(new Leitura(valorLido, arquivo.getName()));
+                    usuarioDAO.atualizar(usuario);
 
-                for (File arquivo : arquivos) {
-                    System.out.println("⚠️ NOVA IMAGEM DETECTADA: " + arquivo.getName());
+                    System.out.println("   ✅ Leitura: " + valorLido + " | Consumo da leitura: " + consumo);
 
-                    try {
-                        // 1. OCR (Agora corrigido)
-                        double valorLido = leitorOCR.extrairValor(arquivo);
-
-                        // 2. Calcula Consumo
-                        double consumo = sha.calcularConsumo(valorLido);
-                        sha.registrarLeitura(new Leitura(valorLido, arquivo.getName()));
-
-                        // 3. Atualiza JSON
-                        usuarioDAO.atualizar(usuario);
-
-                        System.out.println("   ✅ Leitura: " + valorLido + " | Consumo da leitura: " + consumo);
-
-                        // --- NOVO: VERIFICAÇÃO DE ALERTA (RF-A01) ---
-                        // Aqui você pode somar o histórico ou usar o consumo pontual.
-                        // Exemplo simplificado: Se a leitura atual for muito alta ou passar do limite do usuário
-                        if (valorLido > usuario.getLimiteConsumoMensal()) {
-                            System.out.println("   🚨 ALERTA: Limite ultrapassado!");
-                            notificarObservadores(usuario, valorLido);
-                        }
-                        // --------------------------------------------
-
-                        moverArquivo(diretorio, arquivo, "processados");
-
-                    } catch (LeituraException e) {
-                        System.err.println("   ❌ Falha no OCR: " + e.getMessage());
-                        moverArquivo(diretorio, arquivo, "erros_leitura");
+                    if (valorLido > usuario.getLimiteConsumoMensal()) {
+                        System.out.println("   🚨 ALERTA: Limite ultrapassado!");
+                        notificarObservadores(usuario, valorLido);
                     }
+                    moverArquivo(diretorio, arquivo, "processados");
+                } catch (LeituraException e) {
+                    System.err.println("   ❌ Falha no OCR: " + e.getMessage());
+                    moverArquivo(diretorio, arquivo, "erros_leitura");
                 }
             }
         }
@@ -123,22 +120,20 @@ public class MonitoramentoFacade {
         if (!pastaDestino.exists()) {
             pastaDestino.mkdir();
         }
-
         File destino = new File(pastaDestino, arquivoOriginal.getName());
-
-        // Se ja existir um arquivo com mesmo nome na pasta destino, tenta renomear
         if (destino.exists()) {
             destino = new File(pastaDestino, System.currentTimeMillis() + "_" + arquivoOriginal.getName());
         }
-
         if (arquivoOriginal.renameTo(destino)) {
             System.out.println("   📂 Arquivo movido para: " + destino.getAbsolutePath());
-        } else {
-            System.err.println("   ⚠️ Erro crítico: Não foi possível mover o arquivo " + arquivoOriginal.getName());
         }
     }
 
-    private void moverParaProcessados(File diretorioPai, File arquivoOriginal) {
+    public UsuarioDAO getUsuarioDAO() {
+        return usuarioDAO;
+    }
+
+    /*private void moverParaProcessados(File diretorioPai, File arquivoOriginal) {
         File pastaProcessados = new File(diretorioPai, "processados");
         if (!pastaProcessados.exists()) {
             pastaProcessados.mkdir();
@@ -150,5 +145,5 @@ public class MonitoramentoFacade {
         } else {
             System.err.println("   ⚠️ Erro ao mover arquivo. Verifique permissões.");
         }
-    }
+    }*/
 }
