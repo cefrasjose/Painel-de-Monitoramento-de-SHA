@@ -39,7 +39,7 @@ public class TesseractAdapter implements ILeitorImagem {
             BufferedImage imagemTratada = new BufferedImage(novaLargura, novaAltura, BufferedImage.TYPE_BYTE_GRAY);
             Graphics2D g = imagemTratada.createGraphics();
 
-            //Interpolação de qualidade para manter os números nítidos
+            //Interpolacao de qualidade para manter os numeros nitidos
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             g.drawImage(imagemOriginal, 0, 0, novaLargura, novaAltura, null);
             g.dispose();

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MonitoramentoFacade {
 
-    //1. Variável estática para guardar a única instância (SINGLETON)
+    //1 Variavel estatica para guardar a unica instância (SINGLETON)
     private static MonitoramentoFacade instance;
 
     //private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -37,7 +37,7 @@ public class MonitoramentoFacade {
         this.observadores.add(new EmailNotificador());
     }
 
-    //3 Metodo público estático para acessar a instância (Ponto Global de Acesso)
+    //3 Metodo publico estático para acessar a instancia (Ponto Global de Acesso)
     public static synchronized MonitoramentoFacade getInstance() {
         if (instance == null) {
             instance = new MonitoramentoFacade();
@@ -64,7 +64,7 @@ public class MonitoramentoFacade {
     }
 
     private void verificarDiretorios() {
-        //System.out.println("\n[AGENDADOR] Buscando hidrômetros ativos no banco...");
+        //System.out.println("\n[AGENDADOR] Buscando hidrometros ativos no banco...");
         List<Usuario> usuarios = usuarioDAO.listarTodos();
         for (Usuario u : usuarios) {
             for (Hidrometro h : u.getHidrometros()) {
@@ -114,7 +114,7 @@ public class MonitoramentoFacade {
         }
     }
 
-    // Metodo auxiliar generico para mover arquivos
+    //Metodo auxiliar generico para mover arquivos
     private void moverArquivo(File diretorioPai, File arquivoOriginal, String nomePastaDestino) {
         File pastaDestino = new File(diretorioPai, nomePastaDestino);
         if (!pastaDestino.exists()) {
@@ -132,18 +132,4 @@ public class MonitoramentoFacade {
     public UsuarioDAO getUsuarioDAO() {
         return usuarioDAO;
     }
-
-    /*private void moverParaProcessados(File diretorioPai, File arquivoOriginal) {
-        File pastaProcessados = new File(diretorioPai, "processados");
-        if (!pastaProcessados.exists()) {
-            pastaProcessados.mkdir();
-        }
-
-        File destino = new File(pastaProcessados, arquivoOriginal.getName());
-        if (arquivoOriginal.renameTo(destino)) {
-            System.out.println("   📂 Arquivo movido para: " + destino.getAbsolutePath());
-        } else {
-            System.err.println("   ⚠️ Erro ao mover arquivo. Verifique permissões.");
-        }
-    }*/
 }
